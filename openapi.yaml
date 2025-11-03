@@ -1,0 +1,123 @@
+openapi: 3.0.0
+info:
+  title: Courier
+  description: Backend documentation
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@email.com
+
+servers:
+  - url: http://localhost:5000/api
+    description: Development server
+  # - url: https://booking-backend-v2-1.onrender.com/api
+  #   description: Production server
+
+tags:
+  - name: Authentication
+    description: User authentication endpoints
+  - name: Users
+    description: User management endpoints
+
+paths:
+  # USER AUTHENTICATION ENDPOINTS
+  /user/sign-in:
+    post:
+      tags: [Authentication]
+      summary: User login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Welcome back, {USER}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  id:
+                    type: string
+        "400":
+          description: User Error | User Credentials Error
+        "500":
+          description: An error occured
+
+  /user/sign-up:
+    post:
+      tags: [Authentication]
+      summary: User registration
+      description: Creates a new user account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - password
+                - email
+              properties:
+                name:
+                  type: string
+                password:
+                  type: string
+                  format: password
+                email:
+                  type: string
+                  format: email
+      responses:
+        "200":
+          description: Welcome, {USER}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  id:
+                    type: string
+        "400":
+          description: Error Signing Up
+        "500":
+          description: An error occured
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        validated:
+          type: boolean
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []
